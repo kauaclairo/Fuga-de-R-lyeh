@@ -15,86 +15,90 @@ while True:
         print("Nome Inválido!")
         
 tamanho = (800,200)
-pygame.display.set_caption("Iron Man do Marcão")
+pygame.display.set_caption("Fuga de R'lyeh")
 icone  = pygame.image.load("bases/icone.png")
 pygame.display.set_icon(icone)
 relogio = pygame.time.Clock()
 tela = pygame.display.set_mode( tamanho ) 
-branco = (255, 255, 255)
-preto = (0, 0, 0)
+verde_abissal = (4, 30, 34)
+verde_esmeralda = (92, 224, 172)
+texto_claro = (232, 244, 238)
 
 fundo = pygame.image.load("bases/background.jpg")
 fundoDead = pygame.image.load("bases/backgroundDead.jpg")
 fundoStart = pygame.image.load("bases/backgroundStart.jpg")
+fundo = pygame.transform.scale(fundo, (1129, 200))
+fundoDead = pygame.transform.scale(fundoDead, (800, 200))
+fundoStart = pygame.transform.scale(fundoStart, (800, 200))
 
-iron = pygame.image.load("bases/IronMan.png")
-iron = pygame.transform.scale(iron, (116,51))
-missel = pygame.image.load("bases/missile.png")
-missel = pygame.transform.scale(missel, (125,25))
-missileSound = pygame.mixer.Sound("bases/missile.wav")
+submarino = pygame.image.load("bases/submarino.png")
+submarino = pygame.transform.scale(submarino, (116,51))
+tentaculo = pygame.image.load("bases/tentaculo.png")
+tentaculo = pygame.transform.scale(tentaculo, (125,25))
+tentaculoSound = pygame.mixer.Sound("bases/missile.wav")
 explosaoSound = pygame.mixer.Sound("bases/explosao.wav")
 pygame.mixer.music.load("bases/ironsound.mp3")
-fonteMenu = pygame.font.SysFont("comicsans",18)
+fonteMenu = pygame.font.SysFont("Georgia",18)
 
 def jogar():
     fundoMov1 = 0
     fundoMov2 = 1129
-    posicaoXPersona = 0
-    posicaoYPersona = 60
-    movimentoXPersona  = 0
-    movimentoYPersona  = 0
-    velocidadeMovPersona = 5
-    posicaoXMissel = 800
-    posicaoYMissel = 100
-    velocidadeMissel = 2
+    posicaoXSubmarino = 0
+    posicaoYSubmarino = 60
+    movimentoXSubmarino  = 0
+    movimentoYSubmarino  = 0
+    velocidadeMovSubmarino = 5
+    posicaoXTentaculo = 800
+    posicaoYTentaculo = 100
+    velocidadeTentaculo = 2
     pontos = 0
-    pygame.mixer.Sound.play(missileSound)
+    pygame.mixer.Sound.play(tentaculoSound)
     pygame.mixer.music.play(-1)
     dificuldade = 20
     while True:
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
                 quit()
-                movimentoXPersona = 0
+                movimentoXSubmarino = 0
             elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_UP:
-                movimentoYPersona = -velocidadeMovPersona
+                movimentoYSubmarino = -velocidadeMovSubmarino
             elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_DOWN:
-                movimentoYPersona = velocidadeMovPersona
+                movimentoYSubmarino = velocidadeMovSubmarino
             elif evento.type == pygame.KEYUP and evento.key == pygame.K_UP:
-                movimentoYPersona = 0
+                movimentoYSubmarino = 0
             elif evento.type == pygame.KEYUP and evento.key == pygame.K_DOWN:
-                movimentoYPersona = 0
+                movimentoYSubmarino = 0
             elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_RIGHT:
-                movimentoXPersona = velocidadeMovPersona
+                movimentoXSubmarino = velocidadeMovSubmarino
             elif evento.type == pygame.KEYDOWN and evento.key == pygame.K_LEFT:
-                movimentoXPersona = -velocidadeMovPersona
+                movimentoXSubmarino = -velocidadeMovSubmarino
             elif evento.type == pygame.KEYUP and evento.key == pygame.K_RIGHT:
-                movimentoXPersona = 0
+                movimentoXSubmarino = 0
             elif evento.type == pygame.KEYUP and evento.key == pygame.K_LEFT:
-                movimentoXPersona = 0
+                movimentoXSubmarino = 0
                 
         
-        posicaoXPersona = posicaoXPersona + movimentoXPersona          
-        posicaoYPersona = posicaoYPersona + movimentoYPersona            
-        if posicaoXPersona < 0 :
-            posicaoXPersona = 0
-        elif posicaoXPersona > 685:
-            posicaoXPersona = 685
-        if posicaoYPersona < 0 :
-            posicaoYPersona = 0
-        elif posicaoYPersona > 150:
-            posicaoYPersona = 150
+        posicaoXSubmarino = posicaoXSubmarino + movimentoXSubmarino          
+        posicaoYSubmarino = posicaoYSubmarino + movimentoYSubmarino            
+        if posicaoXSubmarino < 0 :
+            posicaoXSubmarino = 0
+        elif posicaoXSubmarino > 685:
+            posicaoXSubmarino = 685
+        if posicaoYSubmarino < 0 :
+            posicaoYSubmarino = 0
+        elif posicaoYSubmarino > 150:
+            posicaoYSubmarino = 150
             
             
-        posicaoXMissel = posicaoXMissel - velocidadeMissel
-        if posicaoXMissel < -125:
-            pygame.mixer.Sound.play(missileSound)
-            posicaoXMissel = 800
+        posicaoXTentaculo = posicaoXTentaculo - velocidadeTentaculo
+        if posicaoXTentaculo < -125:
+            pygame.mixer.Sound.play(tentaculoSound)
+            posicaoXTentaculo = 800
             pontos = pontos + 1
-            velocidadeMissel = velocidadeMissel + 1
-            posicaoYMissel = random.randint(0,200)
+            velocidadeTentaculo = velocidadeTentaculo + 1
+            posicaoYTentaculo = random.randint(0,200)
                             
-        tela.fill(branco)
+        tela.fill(texto_claro)
         tela.blit(fundo, (fundoMov1,0) )
         tela.blit(fundo, (fundoMov2,0) )
         fundoMov1 -= 1
@@ -105,17 +109,17 @@ def jogar():
             fundoMov2 = 1129
         
         
-        tela.blit(iron, (posicaoXPersona,posicaoYPersona))
-        tela.blit( missel, (posicaoXMissel, posicaoYMissel) )
-        texto = fonteMenu.render("Pontos: "+str(pontos), True, branco)
+        tela.blit(submarino, (posicaoXSubmarino,posicaoYSubmarino))
+        tela.blit(tentaculo, (posicaoXTentaculo, posicaoYTentaculo))
+        texto = fonteMenu.render("Pontos: "+str(pontos), True, texto_claro)
         tela.blit(texto, (700,15))
             
-        pixelsPersonaX = list(range(posicaoXPersona, posicaoXPersona+116))
-        pixelsPersonaY = list(range(posicaoYPersona, posicaoYPersona+51))
-        pixelsMisselX = list(range(posicaoXMissel, posicaoXMissel + 125))
-        pixelsMisselY = list(range(posicaoYMissel, posicaoYMissel + 25))
-        if  len( list( set(pixelsMisselY).intersection(set(pixelsPersonaY))) ) > dificuldade:
-            if len( list( set(pixelsMisselX).intersection(set(pixelsPersonaX))   ) )  > dificuldade:
+        pixelsSubmarinoX = list(range(posicaoXSubmarino, posicaoXSubmarino+116))
+        pixelsSubmarinoY = list(range(posicaoYSubmarino, posicaoYSubmarino+51))
+        pixelsTentaculoX = list(range(posicaoXTentaculo, posicaoXTentaculo + 125))
+        pixelsTentaculoY = list(range(posicaoYTentaculo, posicaoYTentaculo + 25))
+        if  len( list( set(pixelsTentaculoY).intersection(set(pixelsSubmarinoY))) ) > dificuldade:
+            if len( list( set(pixelsTentaculoX).intersection(set(pixelsSubmarinoX))   ) )  > dificuldade:
                 escreverDados(nome, pontos)
                 dead()
                 
@@ -161,14 +165,16 @@ def dead():
                     alturaButtonQuit  = 40
                     quit()
             
-        tela.fill(branco)
+        tela.fill(texto_claro)
         tela.blit(fundoDead, (0,0))
-        startButton = pygame.draw.rect(tela, branco, (10,10, larguraButtonStart, alturaButtonStart), border_radius=15)
-        startTexto = fonteMenu.render("Iniciar Game", True, preto)
+        startButton = pygame.draw.rect(tela, verde_abissal, (10,10, larguraButtonStart, alturaButtonStart), border_radius=15)
+        pygame.draw.rect(tela, verde_esmeralda, startButton, width=2, border_radius=15)
+        startTexto = fonteMenu.render("Iniciar Game", True, texto_claro)
         tela.blit(startTexto, (25,12))
         
-        quitButton = pygame.draw.rect(tela, branco, (10,60, larguraButtonQuit, alturaButtonQuit), border_radius=15)
-        quitTexto = fonteMenu.render("Sair do Game", True, preto)
+        quitButton = pygame.draw.rect(tela, verde_abissal, (10,60, larguraButtonQuit, alturaButtonQuit), border_radius=15)
+        pygame.draw.rect(tela, verde_esmeralda, quitButton, width=2, border_radius=15)
+        quitTexto = fonteMenu.render("Sair do Game", True, texto_claro)
         tela.blit(quitTexto, (25,62))
 
 
@@ -208,16 +214,18 @@ def start():
                     alturaButtonQuit  = 40
                     quit()
             
-        tela.fill(branco)
+        tela.fill(texto_claro)
         tela.blit(fundoStart, (0,0))
-        startButton = pygame.draw.rect(tela, branco, (10,10, larguraButtonStart, alturaButtonStart), border_radius=15)
-        startTexto = fonteMenu.render("Iniciar Game", True, preto)
+        startButton = pygame.draw.rect(tela, verde_abissal, (10,10, larguraButtonStart, alturaButtonStart), border_radius=15)
+        pygame.draw.rect(tela, verde_esmeralda, startButton, width=2, border_radius=15)
+        startTexto = fonteMenu.render("Iniciar Game", True, texto_claro)
         tela.blit(startTexto, (25,12))
         
-        quitButton = pygame.draw.rect(tela, branco, (10,60, larguraButtonQuit, alturaButtonQuit), border_radius=15)
-        quitTexto = fonteMenu.render("Sair do Game", True, preto)
+        quitButton = pygame.draw.rect(tela, verde_abissal, (10,60, larguraButtonQuit, alturaButtonQuit), border_radius=15)
+        pygame.draw.rect(tela, verde_esmeralda, quitButton, width=2, border_radius=15)
+        quitTexto = fonteMenu.render("Sair do Game", True, texto_claro)
         tela.blit(quitTexto, (25,62))
-        texto = fonteMenu.render(f" O melhor - {nome_maior} - {maior_pontos} - { dataJogada} ", True, branco)
+        texto = fonteMenu.render(f" O melhor - {nome_maior} - {maior_pontos} - { dataJogada} ", True, texto_claro)
         tela.blit(texto, (480,15))
         
 
