@@ -54,7 +54,6 @@ def jogar():
     pontos = 0
     pygame.mixer.Sound.play(tentaculoSound)
     pygame.mixer.music.play(-1)
-    dificuldade = 20
     while True:
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
@@ -95,8 +94,8 @@ def jogar():
             pygame.mixer.Sound.play(tentaculoSound)
             posicaoXTentaculo = 800
             pontos = pontos + 1
-            velocidadeTentaculo = velocidadeTentaculo + 1
-            posicaoYTentaculo = random.randint(0,200)
+            velocidadeTentaculo = min(velocidadeTentaculo + 1, 14)
+            posicaoYTentaculo = random.randint(0,175)
                             
         tela.fill(texto_claro)
         tela.blit(fundo, (fundoMov1,0) )
@@ -114,19 +113,15 @@ def jogar():
         texto = fonteMenu.render("Pontos: "+str(pontos), True, texto_claro)
         tela.blit(texto, (700,15))
             
-        pixelsSubmarinoX = list(range(posicaoXSubmarino, posicaoXSubmarino+116))
-        pixelsSubmarinoY = list(range(posicaoYSubmarino, posicaoYSubmarino+51))
-        pixelsTentaculoX = list(range(posicaoXTentaculo, posicaoXTentaculo + 125))
-        pixelsTentaculoY = list(range(posicaoYTentaculo, posicaoYTentaculo + 25))
-        if  len( list( set(pixelsTentaculoY).intersection(set(pixelsSubmarinoY))) ) > dificuldade:
-            if len( list( set(pixelsTentaculoX).intersection(set(pixelsSubmarinoX))   ) )  > dificuldade:
-                escreverDados(nome, pontos)
-                dead()
-                
-            else:
-                print("Ainda Vivo, mas por pouco!")
-        else:
-            print("Ainda Vivo")
+        hitboxSubmarino = pygame.Rect(
+            posicaoXSubmarino, posicaoYSubmarino, *submarino.get_size()
+        ).inflate(-15, -10)
+        hitboxTentaculo = pygame.Rect(
+            posicaoXTentaculo, posicaoYTentaculo, *tentaculo.get_size()
+        ).inflate(-15, -10)
+        if hitboxSubmarino.colliderect(hitboxTentaculo):
+            escreverDados(nome, pontos)
+            dead()
         
         
         pygame.display.update()
