@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pygame
 import random
 from recursos.funcoes import inicializarBancoDeDados, limpar_tela, escreverDados, maior_pontuador
@@ -35,9 +37,14 @@ submarino = pygame.image.load("bases/submarino.png")
 submarino = pygame.transform.scale(submarino, (116,51))
 tentaculo = pygame.image.load("bases/tentaculo.png")
 tentaculo = pygame.transform.scale(tentaculo, (125,25))
-tentaculoSound = pygame.mixer.Sound("bases/missile.wav")
-explosaoSound = pygame.mixer.Sound("bases/explosao.wav")
-pygame.mixer.music.load("bases/ironsound.mp3")
+tentaculoSound = pygame.mixer.Sound(
+    "bases/ataque.wav" if Path("bases/ataque.wav").is_file() else "bases/missile.wav"
+)
+explosaoSound = pygame.mixer.Sound(
+    "bases/morte.wav" if Path("bases/morte.wav").is_file() else "bases/explosao.wav"
+)
+trilha = "bases/trilha.mp3" if Path("bases/trilha.mp3").is_file() else "bases/ironsound.mp3"
+pygame.mixer.music.load(trilha)
 fonteMenu = pygame.font.SysFont("Georgia",18)
 
 def jogar():
@@ -121,13 +128,15 @@ def jogar():
         ).inflate(-15, -10)
         if hitboxSubmarino.colliderect(hitboxTentaculo):
             escreverDados(nome, pontos)
-            dead()
+            dead(pontos)
         
         
         pygame.display.update()
         relogio.tick(60)
 
-def dead():
+def dead(pontos):
+    global nome_maior, maior_pontos, dataJogada
+    nome_maior, maior_pontos, dataJogada = maior_pontuador()
     pygame.mixer.music.stop()
     pygame.mixer.Sound.play(explosaoSound)
     larguraButtonStart = 150
@@ -164,13 +173,17 @@ def dead():
         tela.blit(fundoDead, (0,0))
         startButton = pygame.draw.rect(tela, verde_abissal, (10,10, larguraButtonStart, alturaButtonStart), border_radius=15)
         pygame.draw.rect(tela, verde_esmeralda, startButton, width=2, border_radius=15)
-        startTexto = fonteMenu.render("Iniciar Game", True, texto_claro)
-        tela.blit(startTexto, (25,12))
+        startTexto = fonteMenu.render("Iniciar Fuga", True, texto_claro)
+        tela.blit(startTexto, startTexto.get_rect(center=startButton.center))
         
         quitButton = pygame.draw.rect(tela, verde_abissal, (10,60, larguraButtonQuit, alturaButtonQuit), border_radius=15)
         pygame.draw.rect(tela, verde_esmeralda, quitButton, width=2, border_radius=15)
-        quitTexto = fonteMenu.render("Sair do Game", True, texto_claro)
-        tela.blit(quitTexto, (25,62))
+        quitTexto = fonteMenu.render("Sair do Abismo", True, texto_claro)
+        tela.blit(quitTexto, quitTexto.get_rect(center=quitButton.center))
+        pontuacaoTexto = fonteMenu.render(
+            f"Sanidade perdida! Pontos: {pontos}", True, texto_claro
+        )
+        tela.blit(pontuacaoTexto, pontuacaoTexto.get_rect(center=(400, 150)))
 
 
         pygame.display.update()
@@ -213,13 +226,13 @@ def start():
         tela.blit(fundoStart, (0,0))
         startButton = pygame.draw.rect(tela, verde_abissal, (10,10, larguraButtonStart, alturaButtonStart), border_radius=15)
         pygame.draw.rect(tela, verde_esmeralda, startButton, width=2, border_radius=15)
-        startTexto = fonteMenu.render("Iniciar Game", True, texto_claro)
-        tela.blit(startTexto, (25,12))
+        startTexto = fonteMenu.render("Iniciar Fuga", True, texto_claro)
+        tela.blit(startTexto, startTexto.get_rect(center=startButton.center))
         
         quitButton = pygame.draw.rect(tela, verde_abissal, (10,60, larguraButtonQuit, alturaButtonQuit), border_radius=15)
         pygame.draw.rect(tela, verde_esmeralda, quitButton, width=2, border_radius=15)
-        quitTexto = fonteMenu.render("Sair do Game", True, texto_claro)
-        tela.blit(quitTexto, (25,62))
+        quitTexto = fonteMenu.render("Sair do Abismo", True, texto_claro)
+        tela.blit(quitTexto, quitTexto.get_rect(center=quitButton.center))
         texto = fonteMenu.render(f" O melhor - {nome_maior} - {maior_pontos} - { dataJogada} ", True, texto_claro)
         tela.blit(texto, (480,15))
         
